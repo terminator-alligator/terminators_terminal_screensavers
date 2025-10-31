@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	numBoids          = 40
+	numBoids          = 80
 	minDistance       = 2.0
 	maxRange          = 10
 	neighborDist      = 5

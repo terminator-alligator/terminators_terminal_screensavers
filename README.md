@@ -31,3 +31,6 @@ Currently, the following screensavers are available:
 *   **LangtonsAnt**: A basic cellular automata simulation.
 *   **BubbleSort**: A simple implementation of the bubble sort algorithm.
 *   **MazeGenerationPrims**: Maze generation with Prim's algorithm.
+
+## License
+MIT
