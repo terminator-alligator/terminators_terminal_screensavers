@@ -1,0 +1,59 @@
+package langtonsant
+
+import (
+	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
+	"main.go/internal/animation"
+)
+
+type cellState int
+
+const (
+	dead cellState = iota
+	alive
+)
+
+const (
+	aliveChar = `█`
+	deadChar  = ` `
+	antChar   = `@`
+)
+
+type vec2 struct {
+	x int
+	y int
+}
+
+var antStyle = lipgloss.NewStyle().
+	Background(lipgloss.ANSIColor(0)).
+	Foreground(lipgloss.ANSIColor(9))
+
+var cellStyle = lipgloss.NewStyle().
+	Background(lipgloss.ANSIColor(0))
+
+type LangtonsAnt struct {
+	animation.Base
+	styledAlive string
+	styledEmpty string
+	styledAnt   string
+	grid        [][]cellState
+	antPos      vec2
+	antDir      vec2
+}
+
+func (m *LangtonsAnt) Init() tea.Cmd {
+	return nil
+}
+
+// New implements the animation.IAnimation interface.
+func (m *LangtonsAnt) New() animation.IAnimation {
+	return &LangtonsAnt{
+		styledAlive: cellStyle.Render(aliveChar),
+		styledEmpty: cellStyle.Render(deadChar),
+		styledAnt:   antStyle.Render(antChar),
+	}
+}
+
+func (m *LangtonsAnt) Name() string {
+	return "LangtonsAnt"
+}
