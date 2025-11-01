@@ -21,11 +21,11 @@ func (m *Boids) simInit() {
 }
 
 func (m *Boids) initBoids() {
-	for range numBoids {
+	for range m.numBoids {
 		// Start with random positions and velocities
 		b := &boid{
 			pos: vec2{rand.Float64() * float64(m.Width), rand.Float64() * float64(m.Height)},
-			dir: vec2{(rand.Float64()*2 - 1) * maxVelocity, (rand.Float64()*2 - 1) * maxVelocity},
+			dir: vec2{(rand.Float64()*2 - 1) * m.maxVelocity, (rand.Float64()*2 - 1) * m.maxVelocity},
 		}
 		m.flock = append(m.flock, b)
 	}
@@ -48,21 +48,21 @@ func (m *Boids) simUpdate() {
 				continue
 			}
 			distance := euclideanDistance(boid1.pos.x, boid1.pos.y, boid2.pos.x, boid2.pos.y)
-			if distance < maxRange {
-				repulsion := separation(boid1, boid2, distance)
+			if distance < m.maxRange {
+				repulsion := m.separation(boid1, boid2, distance)
 				boid1.dir = boid1.dir.add(repulsion)
 			}
-			if distance < neighborDist {
+			if distance < m.neighborDist {
 				avgPoss = avgPoss.add(boid2.pos)
 				avgDir = avgDir.add(boid2.dir)
 				avgLen++
 			}
 		}
 
-		cohesionForce := cohesion(boid1, avgPoss, avgLen)
-		alignmentForce := alignment(avgDir, avgLen)
+		cohesionForce := m.cohesion(boid1, avgPoss, avgLen)
+		alignmentForce := m.alignment(avgDir, avgLen)
 		boid1.dir = boid1.dir.add(cohesionForce).add(alignmentForce)
-		boid1.dir = limitVelocity(boid1.dir)
+		boid1.dir = m.limitVelocity(boid1.dir)
 		boid1.pos = boid1.pos.add(boid1.dir)
 		m.edgeCollision(boid1)
 	}
@@ -85,24 +85,24 @@ func (m *Boids) edgeCollision(b *boid) {
 	}
 }
 
-func limitVelocity(v vec2) vec2 {
-	if v.len() > maxVelocity {
-		return v.unit().scaled(maxVelocity)
+func (m *Boids) limitVelocity(v vec2) vec2 {
+	if v.len() > m.maxVelocity {
+		return v.unit().scaled(m.maxVelocity)
 	}
 	return v
 }
 
-func separation(boid1, boid2 *boid, distance float64) vec2 {
+func (m *Boids) separation(boid1, boid2 *boid, distance float64) vec2 {
 	differenceVector := vec2{(boid1.pos.x - boid2.pos.x), (boid1.pos.y - boid2.pos.y)}
-	if distance < minDistance {
+	if distance < m.minDistance {
 		normalVec := normalize(differenceVector)
-		repulsion := normalVec.scaled((minDistance - distance) / distance)
+		repulsion := normalVec.scaled((m.minDistance - distance) / distance)
 		return repulsion
 	}
 	return vec2{0, 0}
 }
 
-func cohesion(boid *boid, avgPos vec2, avgLen int) vec2 {
+func (m *Boids) cohesion(boid *boid, avgPos vec2, avgLen int) vec2 {
 	if avgLen == 0 {
 		return vec2{0, 0}
 	}
@@ -115,10 +115,10 @@ func cohesion(boid *boid, avgPos vec2, avgLen int) vec2 {
 	// Normalize and scale the vector (optional: adjust the scaling factor to control strength)
 	normalVec := normalize(directionToCenter)
 
-	return normalVec.scaled(cohesionStrength)
+	return normalVec.scaled(m.cohesionWeight)
 }
 
-func alignment(avgDir vec2, avgLen int) vec2 {
+func (m *Boids) alignment(avgDir vec2, avgLen int) vec2 {
 	if avgLen == 0 {
 		return vec2{0, 0}
 	}
@@ -127,5 +127,5 @@ func alignment(avgDir vec2, avgLen int) vec2 {
 
 	normalVec := normalize(avgDir)
 
-	return normalVec.scaled(alignmentStrength)
+	return normalVec.scaled(m.alignmentWeight)
 }

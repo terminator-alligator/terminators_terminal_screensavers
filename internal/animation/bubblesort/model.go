@@ -3,6 +3,7 @@ package bubblesort
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"main.go/config"
 	"main.go/internal/animation"
 )
 
@@ -21,8 +22,12 @@ func (m *BubbleSort) Init() tea.Cmd {
 }
 
 // New implements the animation.IAnimation interface.
-func (m *BubbleSort) New() animation.IAnimation {
-	return &BubbleSort{}
+func (m *BubbleSort) New(appConfig config.AppConfig) animation.IAnimation {
+	return &BubbleSort{Base: animation.Base{Config: appConfig, TimeScale: appConfig.BobbleSort.TimeScale}}
+}
+
+func (m *BubbleSort) GetTimeScale() float64 {
+	return m.TimeScale
 }
 
 func (m *BubbleSort) Name() string {

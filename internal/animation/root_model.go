@@ -5,11 +5,14 @@ import (
 	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"main.go/config"
 )
 
 // TODO: add the ability to chaing animations
 
 type RootModel struct {
+	Config      config.AppConfig
+	frameRate   float64
 	CurrentAnim IAnimation
 	width       int
 	height      int
@@ -26,8 +29,8 @@ type TickMsg time.Time
 
 // controls animations speed
 // TODO: use custom speed in each animation
-func tickCmd() tea.Cmd {
-	return tea.Tick(time.Second/100, func(t time.Time) tea.Msg {
+func tickCmd(frameRate float64) tea.Cmd {
+	return tea.Tick(time.Second/time.Duration(frameRate), func(t time.Time) tea.Msg {
 		return TickMsg(t)
 	})
 }
@@ -38,15 +41,22 @@ func AnimationFinishedCmd() tea.Cmd {
 	return func() tea.Msg { return animationFinishedMsg{} }
 }
 
-func NewRootModel(initialAnnim IAnimation) RootModel {
+func NewRootModel(AppConfig config.AppConfig, initialAnnim IAnimation) RootModel {
 	return RootModel{
+		frameRate:   AppConfig.Global.FrameRate,
+		Config:      AppConfig,
 		CurrentAnim: initialAnnim,
 	}
 }
 
 func (m *RootModel) Init() tea.Cmd {
 	m.CurrentAnim.Init()
-	return tickCmd()
+	timeScale := m.CurrentAnim.GetTimeScale()
+	if timeScale <= 0 {
+		return nil
+	}
+	m.frameRate = m.frameRate * timeScale
+	return tickCmd(m.frameRate)
 }
 
 func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -69,9 +79,9 @@ func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		var cmd tea.Cmd
 		if m.height >= minWindowHeight && m.width >= minWindowWidth {
 			m.CurrentAnim, cmd = m.CurrentAnim.Update(msg)
-			return m, tea.Batch(tickCmd(), cmd)
+			return m, tea.Batch(tickCmd(m.frameRate), cmd)
 		} else {
-			return m, tickCmd()
+			return m, tickCmd(m.frameRate)
 		}
 	case animationFinishedMsg:
 		// TODO: handle animation finished, e.g. chain to next animation
