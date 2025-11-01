@@ -4,7 +4,6 @@ import (
 	"math/rand"
 )
 
-// initialise the sim
 func (m *Boids) simInit() {
 	m.flock = []*boid{}
 	m.initBoids()
@@ -69,6 +68,7 @@ func (m *Boids) simUpdate() {
 }
 
 func (m *Boids) edgeCollision(b *boid) {
+	// flip the direction
 	if b.pos.x < 0 {
 		b.pos.x = 0
 		b.dir.x = -b.dir.x
@@ -112,7 +112,7 @@ func (m *Boids) cohesion(boid *boid, avgPos vec2, avgLen int) vec2 {
 	// Calculate the vector towards the average position
 	directionToCenter := avgMass.sub(boid.pos)
 
-	// Normalize and scale the vector (optional: adjust the scaling factor to control strength)
+	// Normalize and scale the vector
 	normalVec := normalize(directionToCenter)
 
 	return normalVec.scaled(m.cohesionWeight)

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"path"
 
@@ -42,7 +41,7 @@ type BoidsConfig struct {
 	TimeScale       float64 `toml:"time_scale"`
 	NumBoids        int     `toml:"num_boids"`
 	MinDistance     float64 `toml:"min_distance"`
-	MaxVelocity     float64 `toml:"max_veloctity"`
+	MaxVelocity     float64 `toml:"max_velocity"`
 	NeighborDist    float64 `toml:"neighbor_dist"`
 	MaxRange        float64 `toml:"max_Range"`
 	CohesionWeight  float64 `toml:"cohesion_weight"`
@@ -79,24 +78,27 @@ func NewDefaultConfig() AppConfig {
 
 func Load() (AppConfig, error) {
 	config := NewDefaultConfig()
-	// 1. Specify the path to your configuration file
+	// load the defaults first
+
+	// TODO: this still needs a lot of work
+
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return AppConfig{}, err
 	}
 	configPath := path.Join(homeDir, ".config", AppName, ConfigFileName)
 
-	// 2. Read the entire file content into a byte slice
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		if err == os.ErrNotExist {
+			// If the config file doesn't exist, return the default config
+			// TODO: instead of this we should create the file
 			return config, nil
 		}
 		return AppConfig{}, err
 	}
 
-	// 3. Unmarshal the byte slice into the configuration struct C
+	// override the defaults with the users
 	if err := toml.Unmarshal(data, &config); err != nil {
 		return AppConfig{}, err
 	}

@@ -83,6 +83,7 @@ func TestBoids_edgeCollision(t *testing.T) {
 }
 
 func Test_limitVelocity(t *testing.T) {
+	const maxVelocity = 2.0
 	tests := []struct {
 		name            string
 		initialVelocity vec2
@@ -106,7 +107,8 @@ func Test_limitVelocity(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := limitVelocity(tt.initialVelocity)
+			m := &Boids{maxVelocity: maxVelocity}
+			got := m.limitVelocity(tt.initialVelocity)
 			if got.len() > maxVelocity {
 				t.Errorf("limitVelocity() = %v, length %v, expected max length %v", got, got.len(), maxVelocity)
 			} else if got.len() < 0 {
