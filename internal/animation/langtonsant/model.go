@@ -3,6 +3,7 @@ package langtonsant
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"main.go/config"
 	"main.go/internal/animation"
 )
 
@@ -46,12 +47,17 @@ func (m *LangtonsAnt) Init() tea.Cmd {
 }
 
 // New implements the animation.IAnimation interface.
-func (m *LangtonsAnt) New() animation.IAnimation {
+func (m *LangtonsAnt) New(appConfig config.AppConfig) animation.IAnimation {
 	return &LangtonsAnt{
+		Base:        animation.Base{Config: appConfig, TimeScale: appConfig.LangtonsAnt.TimeScale},
 		styledAlive: cellStyle.Render(aliveChar),
 		styledEmpty: cellStyle.Render(deadChar),
 		styledAnt:   antStyle.Render(antChar),
 	}
+}
+
+func (m *LangtonsAnt) GetTimeScale() float64 {
+	return m.TimeScale
 }
 
 func (m *LangtonsAnt) Name() string {

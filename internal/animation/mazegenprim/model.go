@@ -2,6 +2,7 @@ package mazegenprim
 
 import (
 	tea "github.com/charmbracelet/bubbletea"
+	"main.go/config"
 	"main.go/internal/animation"
 )
 
@@ -37,8 +38,14 @@ func (m *MazeGenerationPrims) Init() tea.Cmd {
 }
 
 // New implements the animation.IAnimation interface.
-func (m *MazeGenerationPrims) New() animation.IAnimation {
-	return &MazeGenerationPrims{}
+func (m *MazeGenerationPrims) New(appConfig config.AppConfig) animation.IAnimation {
+	return &MazeGenerationPrims{
+		Base: animation.Base{Config: appConfig, TimeScale: appConfig.MazeGeneration.TimeScale},
+	}
+}
+
+func (m *MazeGenerationPrims) GetTimeScale() float64 {
+	return m.TimeScale
 }
 
 func (m *MazeGenerationPrims) Name() string {

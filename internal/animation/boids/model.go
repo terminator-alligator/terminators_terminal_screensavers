@@ -4,17 +4,8 @@ import (
 	"math"
 
 	tea "github.com/charmbracelet/bubbletea"
+	"main.go/config"
 	"main.go/internal/animation"
-)
-
-const (
-	numBoids          = 80
-	minDistance       = 2.0
-	maxRange          = 10
-	neighborDist      = 5
-	cohesionStrength  = 0.002
-	alignmentStrength = 0.0005
-	maxVelocity       = 0.1
 )
 
 type vec2 struct {
@@ -61,8 +52,15 @@ func euclideanDistance(x1, y1, x2, y2 float64) float64 {
 
 type Boids struct {
 	animation.Base
-	grid  [][]int
-	flock []*boid
+	grid            [][]int
+	flock           []*boid
+	numBoids        int
+	minDistance     float64
+	maxRange        float64
+	neighborDist    float64
+	cohesionWeight  float64
+	alignmentWeight float64
+	maxVelocity     float64
 }
 type boid struct {
 	pos vec2
@@ -74,8 +72,21 @@ func (m *Boids) Init() tea.Cmd {
 }
 
 // New implements the animation.IAnimation interface.
-func (m *Boids) New() animation.IAnimation {
-	return &Boids{}
+func (m *Boids) New(appConfig config.AppConfig) animation.IAnimation {
+	return &Boids{
+		Base:            animation.Base{Config: appConfig, TimeScale: appConfig.Boids.TimeScale},
+		numBoids:        appConfig.Boids.NumBoids,
+		minDistance:     appConfig.Boids.MinDistance,
+		maxRange:        appConfig.Boids.MaxRange,
+		neighborDist:    appConfig.Boids.NeighborDist,
+		cohesionWeight:  appConfig.Boids.CohesionWeight,
+		alignmentWeight: appConfig.Boids.AlignmentWeight,
+		maxVelocity:     appConfig.Boids.MaxVelocity,
+	}
+}
+
+func (m *Boids) GetTimeScale() float64 {
+	return m.TimeScale
 }
 
 func (m *Boids) Name() string {

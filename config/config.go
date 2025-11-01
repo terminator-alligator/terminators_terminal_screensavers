@@ -1,0 +1,104 @@
+package config
+
+import (
+	"fmt"
+	"os"
+	"path"
+
+	toml "github.com/pelletier/go-toml/v2"
+)
+
+const (
+	AppName        = "ttss"
+	ConfigFileName = "config.toml"
+)
+
+// AppConfig holds the entire configuration structure.
+type AppConfig struct {
+	Global         GlobalConfig         `toml:"global"`
+	Boids          BoidsConfig          `toml:"boids"`
+	BobbleSort     BobbleSortConfig     `toml:"bobble_sort"`
+	LangtonsAnt    LangtonsAntConfig    `toml:"langtons_ant"`
+	MazeGeneration MazeGenerationConfig `toml:"maze_generation"`
+}
+
+type GlobalConfig struct {
+	FrameRate float64 `toml:"frame_rate"`
+	DebugMode bool    `toml:"debug_mode"`
+}
+
+type BobbleSortConfig struct {
+	TimeScale float64 `toml:"time_scale"`
+}
+
+type MazeGenerationConfig struct {
+	TimeScale float64 `toml:"time_scale"`
+}
+type LangtonsAntConfig struct {
+	TimeScale float64 `toml:"time_scale"`
+}
+
+type BoidsConfig struct {
+	TimeScale       float64 `toml:"time_scale"`
+	NumBoids        int     `toml:"num_boids"`
+	MinDistance     float64 `toml:"min_distance"`
+	MaxVelocity     float64 `toml:"max_veloctity"`
+	NeighborDist    float64 `toml:"neighbor_dist"`
+	MaxRange        float64 `toml:"max_Range"`
+	CohesionWeight  float64 `toml:"cohesion_weight"`
+	AlignmentWeight float64 `toml:"alignment_weight"`
+}
+
+func NewDefaultConfig() AppConfig {
+	return AppConfig{
+		Global: GlobalConfig{
+			FrameRate: 60.0,
+			DebugMode: false,
+		},
+		Boids: BoidsConfig{
+			TimeScale:       1.0,
+			NumBoids:        40,
+			MinDistance:     2.0,
+			MaxRange:        10.0,
+			NeighborDist:    10.0,
+			MaxVelocity:     0.1,
+			CohesionWeight:  0.002,
+			AlignmentWeight: 0.0005,
+		},
+		BobbleSort: BobbleSortConfig{
+			TimeScale: 1.0,
+		},
+		LangtonsAnt: LangtonsAntConfig{
+			TimeScale: 1.0,
+		},
+		MazeGeneration: MazeGenerationConfig{
+			TimeScale: 1.0,
+		},
+	}
+}
+
+func Load() (AppConfig, error) {
+	config := NewDefaultConfig()
+	// 1. Specify the path to your configuration file
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	configPath := path.Join(homeDir, ".config", AppName, ConfigFileName)
+
+	// 2. Read the entire file content into a byte slice
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		if err == os.ErrNotExist {
+			return config, nil
+		}
+		return AppConfig{}, err
+	}
+
+	// 3. Unmarshal the byte slice into the configuration struct C
+	if err := toml.Unmarshal(data, &config); err != nil {
+		return AppConfig{}, err
+	}
+	return config, nil
+}
