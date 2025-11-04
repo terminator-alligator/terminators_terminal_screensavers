@@ -14,6 +14,7 @@ import (
 	"main.go/internal/animation/bubblesort"
 	"main.go/internal/animation/langtonsant"
 	"main.go/internal/animation/mazegenprim"
+	"main.go/internal/animation/pipes"
 )
 
 // using flags for now
@@ -34,6 +35,7 @@ func main() {
 		(&bubblesort.BubbleSort{}).New(config),
 		(&mazegenprim.MazeGenerationPrims{}).New(config),
 		(&boids.Boids{}).New(config),
+		(&pipes.Pipes{}).New(config),
 	}
 
 	// set up the logger
@@ -83,7 +85,7 @@ func main() {
 		}
 	} else {
 		// Default to the third animation (Maze Generation) if no specific animation is requested
-		selectedAnimation = AvailableAnimations[3]
+		selectedAnimation = AvailableAnimations[4]
 	}
 
 	m := animation.NewRootModel(config, selectedAnimation)

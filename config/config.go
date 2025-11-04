@@ -19,6 +19,7 @@ type AppConfig struct {
 	BobbleSort     BobbleSortConfig     `toml:"bobble_sort"`
 	LangtonsAnt    LangtonsAntConfig    `toml:"langtons_ant"`
 	MazeGeneration MazeGenerationConfig `toml:"maze_generation"`
+	Pipes          PipesConfig          `toml:"pipes"`
 }
 
 type GlobalConfig struct {
@@ -34,6 +35,10 @@ type MazeGenerationConfig struct {
 	TimeScale float64 `toml:"time_scale"`
 }
 type LangtonsAntConfig struct {
+	TimeScale float64 `toml:"time_scale"`
+}
+
+type PipesConfig struct {
 	TimeScale float64 `toml:"time_scale"`
 }
 
@@ -71,6 +76,9 @@ func NewDefaultConfig() AppConfig {
 			TimeScale: 1.0,
 		},
 		MazeGeneration: MazeGenerationConfig{
+			TimeScale: 1.0,
+		},
+		Pipes: PipesConfig{
 			TimeScale: 1.0,
 		},
 	}
