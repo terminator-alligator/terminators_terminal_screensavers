@@ -1,36 +1,25 @@
-# Terminators Terminal Screensavers (ttss)
-
-A Go application for rendering screensavers in your terminal.
-
+## Terminators Terminal Screensavers (ttss)
 ## About
 
-This project provides a collection of terminal-based screensavers written in Go.
-using BubbloTea and Lipgloss.
+This project provides a collection of terminal-based screensavers written in Go, using the excellent [Bubble Tea](https://github.com/charmbracelet/bubbletea) and [Lipgloss](https://github.com/charmbracelet/lipgloss) libraries.
 
-## Installation
+## Compatibility
 
-To get started, clone the repository and build the application:
+### Windows
+Most features should work as expected, with the exception of terminal resizing. This is a known issue with Bubble Tea on Windows.
 
-```bash
-git clone https://your-repository-url/terminators_terminal_screensavers.git
-cd terminators_terminal_screensavers
-go build
-```
+### Linux
+This application was developed and tested on Linux, so all features should work as expected.
 
-## Usage
+#### tested with
+* Alacritty
+* Ghostty
 
-After building, you can run the application from your terminal:
+### MacOS
+Compatibility on MacOS is currently unknown. If you test it, please feel free to open an issue to update this section!
 
-```bash
-./terminators_terminal_screensavers
-```
 
-## Availabel screensavers
-Currently, the following screensavers are available:
 
-*   **LangtonsAnt**: A basic cellular automata simulation.
-*   **BubbleSort**: A simple implementation of the bubble sort algorithm.
-*   **MazeGenerationPrims**: Maze generation with Prim's algorithm.
+## Contributing
 
-## License
-MIT
+This file is incomplete. Contributions are welcome!
