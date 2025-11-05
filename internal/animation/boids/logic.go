@@ -94,9 +94,9 @@ func (m *Boids) limitVelocity(v vec2) vec2 {
 
 func (m *Boids) separation(boid1, boid2 *boid, distance float64) vec2 {
 	differenceVector := vec2{(boid1.pos.x - boid2.pos.x), (boid1.pos.y - boid2.pos.y)}
-	if distance < m.minDistance {
+	if distance < m.separationWeight {
 		normalVec := normalize(differenceVector)
-		repulsion := normalVec.scaled((m.minDistance - distance) / distance)
+		repulsion := normalVec.scaled((m.separationWeight - distance) / distance)
 		return repulsion
 	}
 	return vec2{0, 0}

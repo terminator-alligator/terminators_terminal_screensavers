@@ -85,7 +85,7 @@ func main() {
 		}
 	} else {
 		// Default to the third animation (Maze Generation) if no specific animation is requested
-		selectedAnimation = AvailableAnimations[4]
+		selectedAnimation = AvailableAnimations[3]
 	}
 
 	m := animation.NewRootModel(config, selectedAnimation)

@@ -43,14 +43,14 @@ type PipesConfig struct {
 }
 
 type BoidsConfig struct {
-	TimeScale       float64 `toml:"time_scale"`
-	NumBoids        int     `toml:"num_boids"`
-	MinDistance     float64 `toml:"min_distance"`
-	MaxVelocity     float64 `toml:"max_velocity"`
-	NeighborDist    float64 `toml:"neighbor_dist"`
-	MaxRange        float64 `toml:"max_Range"`
-	CohesionWeight  float64 `toml:"cohesion_weight"`
-	AlignmentWeight float64 `toml:"alignment_weight"`
+	TimeScale        float64 `toml:"time_scale"`
+	NumBoids         int     `toml:"num_boids"`
+	MaxVelocity      float64 `toml:"max_velocity"`
+	NeighborDist     float64 `toml:"neighbor_dist"`
+	MaxRange         float64 `toml:"max_Range"`
+	CohesionWeight   float64 `toml:"cohesion_weight"`
+	AlignmentWeight  float64 `toml:"alignment_weight"`
+	SeparationWeight float64 `toml:"separation_weight"`
 }
 
 func NewDefaultConfig() AppConfig {
@@ -60,14 +60,14 @@ func NewDefaultConfig() AppConfig {
 			DebugMode: false,
 		},
 		Boids: BoidsConfig{
-			TimeScale:       1.0,
-			NumBoids:        40,
-			MinDistance:     2.0,
-			MaxRange:        10.0,
-			NeighborDist:    10.0,
-			MaxVelocity:     0.1,
-			CohesionWeight:  0.002,
-			AlignmentWeight: 0.0005,
+			TimeScale:        1.0,
+			NumBoids:         40,
+			MaxRange:         10.0,
+			NeighborDist:     10.0,
+			MaxVelocity:      0.1,
+			CohesionWeight:   0.002,
+			AlignmentWeight:  0.0005,
+			SeparationWeight: 2.0,
 		},
 		BobbleSort: BobbleSortConfig{
 			TimeScale: 1.0,

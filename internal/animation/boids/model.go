@@ -52,15 +52,15 @@ func euclideanDistance(x1, y1, x2, y2 float64) float64 {
 
 type Boids struct {
 	animation.Base
-	grid            [][]int
-	flock           []*boid
-	numBoids        int
-	minDistance     float64
-	maxRange        float64
-	neighborDist    float64
-	cohesionWeight  float64
-	alignmentWeight float64
-	maxVelocity     float64
+	grid             [][]int
+	flock            []*boid
+	numBoids         int
+	maxRange         float64
+	neighborDist     float64
+	cohesionWeight   float64
+	alignmentWeight  float64
+	separationWeight float64
+	maxVelocity      float64
 }
 type boid struct {
 	pos vec2
@@ -74,14 +74,14 @@ func (m *Boids) Init() tea.Cmd {
 // New implements the animation.IAnimation interface.
 func (m *Boids) New(appConfig config.AppConfig) animation.IAnimation {
 	return &Boids{
-		Base:            animation.Base{Config: appConfig, TimeScale: appConfig.Boids.TimeScale},
-		numBoids:        appConfig.Boids.NumBoids,
-		minDistance:     appConfig.Boids.MinDistance,
-		maxRange:        appConfig.Boids.MaxRange,
-		neighborDist:    appConfig.Boids.NeighborDist,
-		cohesionWeight:  appConfig.Boids.CohesionWeight,
-		alignmentWeight: appConfig.Boids.AlignmentWeight,
-		maxVelocity:     appConfig.Boids.MaxVelocity,
+		Base:             animation.Base{Config: appConfig, TimeScale: appConfig.Boids.TimeScale},
+		numBoids:         appConfig.Boids.NumBoids,
+		maxRange:         appConfig.Boids.MaxRange,
+		neighborDist:     appConfig.Boids.NeighborDist,
+		cohesionWeight:   appConfig.Boids.CohesionWeight,
+		alignmentWeight:  appConfig.Boids.AlignmentWeight,
+		separationWeight: appConfig.Boids.SeparationWeight,
+		maxVelocity:      appConfig.Boids.MaxVelocity,
 	}
 }
 
