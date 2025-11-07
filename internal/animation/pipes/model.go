@@ -52,7 +52,11 @@ func (m *Pipes) Init() tea.Cmd {
 
 // New implements the animation.IAnimation interface.
 func (m *Pipes) New(appConfig config.AppConfig) animation.IAnimation {
-	return &Pipes{Base: animation.Base{Config: appConfig, TimeScale: appConfig.Pipes.TimeScale}}
+	return &Pipes{
+		Base:            animation.Base{Config: appConfig, TimeScale: appConfig.Pipes.TimeScale},
+		changDirChance:  appConfig.Pipes.ChangDirChance,
+		pipeSpawnChance: appConfig.Pipes.PipeSpawnChance,
+	}
 }
 
 func (m *Pipes) GetTimeScale() float64 {

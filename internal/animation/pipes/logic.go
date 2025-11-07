@@ -3,9 +3,6 @@ package pipes
 import "math/rand"
 
 func (m *Pipes) simInit() {
-	m.changDirChance = 0.5
-	m.pipeSpawnChance = 0.02
-
 	m.grid = make([][]cellState, m.Width)
 	for i := range m.grid {
 		m.grid[i] = make([]cellState, m.Height)

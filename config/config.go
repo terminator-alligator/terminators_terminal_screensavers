@@ -39,7 +39,9 @@ type LangtonsAntConfig struct {
 }
 
 type PipesConfig struct {
-	TimeScale float64 `toml:"time_scale"`
+	TimeScale       float64 `toml:"time_scale"`
+	ChangDirChance  float64 `toml:"chang_direction_chance"`
+	PipeSpawnChance float64 `toml:"pipe_spawn_chance"`
 }
 
 type BoidsConfig struct {
@@ -79,7 +81,9 @@ func NewDefaultConfig() AppConfig {
 			TimeScale: 1.0,
 		},
 		Pipes: PipesConfig{
-			TimeScale: 1.0,
+			TimeScale:       1.0,
+			ChangDirChance:  0.5,
+			PipeSpawnChance: 0.02,
 		},
 	}
 }
