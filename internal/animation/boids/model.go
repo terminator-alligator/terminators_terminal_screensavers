@@ -5,7 +5,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"main.go/config"
-	"main.go/internal/animation"
+	"main.go/internal/animation/base"
 )
 
 type vec2 struct {
@@ -51,7 +51,7 @@ func euclideanDistance(x1, y1, x2, y2 float64) float64 {
 }
 
 type Boids struct {
-	animation.Base
+	base.Base
 	grid             [][]int
 	flock            []*boid
 	numBoids         int
@@ -72,9 +72,9 @@ func (m *Boids) Init() tea.Cmd {
 }
 
 // New implements the animation.IAnimation interface.
-func (m *Boids) New(appConfig config.AppConfig) animation.IAnimation {
+func (m *Boids) New(appConfig config.AppConfig) base.IAnimation {
 	return &Boids{
-		Base:             animation.Base{Config: appConfig, TimeScale: appConfig.Boids.TimeScale},
+		Base:             base.Base{Config: appConfig, TimeScale: appConfig.Boids.TimeScale},
 		numBoids:         appConfig.Boids.NumBoids,
 		maxRange:         appConfig.Boids.MaxRange,
 		neighborDist:     appConfig.Boids.NeighborDist,

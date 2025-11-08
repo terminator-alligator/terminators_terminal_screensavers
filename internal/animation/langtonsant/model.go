@@ -4,7 +4,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 	"main.go/config"
-	"main.go/internal/animation"
+	"main.go/internal/animation/base"
 )
 
 type cellState int
@@ -33,7 +33,7 @@ var cellStyle = lipgloss.NewStyle().
 	Background(lipgloss.ANSIColor(0))
 
 type LangtonsAnt struct {
-	animation.Base
+	base.Base
 	styledAlive string
 	styledEmpty string
 	styledAnt   string
@@ -46,10 +46,10 @@ func (m *LangtonsAnt) Init() tea.Cmd {
 	return nil
 }
 
-// New implements the animation.IAnimation interface.
-func (m *LangtonsAnt) New(appConfig config.AppConfig) animation.IAnimation {
+// New implements the base.IAnimation interface.
+func (m *LangtonsAnt) New(appConfig config.AppConfig) base.IAnimation {
 	return &LangtonsAnt{
-		Base:        animation.Base{Config: appConfig, TimeScale: appConfig.LangtonsAnt.TimeScale},
+		Base:        base.Base{Config: appConfig, TimeScale: appConfig.LangtonsAnt.TimeScale},
 		styledAlive: cellStyle.Render(aliveChar),
 		styledEmpty: cellStyle.Render(deadChar),
 		styledAnt:   antStyle.Render(antChar),

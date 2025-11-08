@@ -2,20 +2,22 @@ package animation
 
 import (
 	"fmt"
-	"time"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"main.go/config"
+	"main.go/internal/animation/base"
 )
 
 // TODO: add the ability to chaing animations
 
 type RootModel struct {
-	Config      config.AppConfig
-	frameRate   float64
-	CurrentAnim IAnimation
-	width       int
-	height      int
+	Config           config.AppConfig
+	frameRate        float64
+	CurrentAnim      base.IAnimation
+	AvailableAnim    []base.IAnimation
+	CurrentAnimIndex int
+	width            int
+	height           int
 }
 
 // these seem like reasonable defaults
@@ -25,23 +27,7 @@ var (
 	minWindowHeight int = 20
 )
 
-type TickMsg time.Time
-
-// controls animations speed
-// TODO: use custom speed in each animation
-func tickCmd(frameRate float64) tea.Cmd {
-	return tea.Tick(time.Second/time.Duration(frameRate), func(t time.Time) tea.Msg {
-		return TickMsg(t)
-	})
-}
-
-type animationFinishedMsg struct{}
-
-func AnimationFinishedCmd() tea.Cmd {
-	return func() tea.Msg { return animationFinishedMsg{} }
-}
-
-func NewRootModel(AppConfig config.AppConfig, initialAnnim IAnimation) RootModel {
+func NewRootModel(AppConfig config.AppConfig, initialAnnim base.IAnimation) RootModel {
 	return RootModel{
 		frameRate:   AppConfig.Global.FrameRate,
 		Config:      AppConfig,
@@ -56,7 +42,7 @@ func (m *RootModel) Init() tea.Cmd {
 		return nil
 	}
 	m.frameRate = m.frameRate * timeScale
-	return tickCmd(m.frameRate)
+	return base.TickCmd(m.frameRate)
 }
 
 func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -75,15 +61,15 @@ func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else {
 			return m, nil
 		}
-	case TickMsg:
+	case base.TickMsg:
 		var cmd tea.Cmd
 		if m.height >= minWindowHeight && m.width >= minWindowWidth {
 			m.CurrentAnim, cmd = m.CurrentAnim.Update(msg)
-			return m, tea.Batch(tickCmd(m.frameRate), cmd)
+			return m, tea.Batch(base.TickCmd(m.frameRate), cmd)
 		} else {
-			return m, tickCmd(m.frameRate)
+			return m, base.TickCmd(m.frameRate)
 		}
-	case animationFinishedMsg:
+	case base.AnimationFinishedMsg:
 		// TODO: handle animation finished, e.g. chain to next animation
 		return m, nil
 	}

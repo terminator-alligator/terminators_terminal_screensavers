@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"main.go/internal/animation"
+	"main.go/internal/animation/base"
 )
 
 func TestLangtonsAnt_simInit(t *testing.T) {
@@ -32,7 +32,7 @@ func TestLangtonsAnt_simInit(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := LangtonsAnt{Base: animation.Base{Width: tt.width, Height: tt.height}}
+			m := LangtonsAnt{Base: base.Base{Width: tt.width, Height: tt.height}}
 			m.simInit()
 
 			if !reflect.DeepEqual(m.antPos, tt.expectedPos) {
@@ -63,7 +63,7 @@ func TestLangtonsAnt_simUpdate(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := LangtonsAnt{Base: animation.Base{Width: tt.width, Height: tt.height}}
+			m := LangtonsAnt{Base: base.Base{Width: tt.width, Height: tt.height}}
 			m.simInit()
 			m.simUpdate()
 

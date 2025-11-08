@@ -10,11 +10,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"main.go/config"
 	"main.go/internal/animation"
-	"main.go/internal/animation/boids"
-	"main.go/internal/animation/bubblesort"
-	"main.go/internal/animation/langtonsant"
-	"main.go/internal/animation/mazegenprim"
-	"main.go/internal/animation/pipes"
+	"main.go/internal/animation/base"
 )
 
 // using flags for now
@@ -30,14 +26,7 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	AvailableAnimations := []animation.IAnimation{
-		(&langtonsant.LangtonsAnt{}).New(config),
-		(&bubblesort.BubbleSort{}).New(config),
-		(&mazegenprim.MazeGenerationPrims{}).New(config),
-		(&boids.Boids{}).New(config),
-		(&pipes.Pipes{}).New(config),
-	}
-
+	AvailableAnimations := animation.GetAvailableAnimations(config)
 	// set up the logger
 	f, err := tea.LogToFile("debug.log", "debug")
 	if err != nil {
@@ -62,7 +51,7 @@ func main() {
 	}
 	defer pprof.StopCPUProfile()
 
-	var selectedAnimation animation.IAnimation
+	var selectedAnimation base.IAnimation
 
 	if *listAnimations {
 		for _, anim := range AvailableAnimations {

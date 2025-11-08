@@ -3,7 +3,7 @@ package pipes
 import (
 	tea "github.com/charmbracelet/bubbletea"
 	"main.go/config"
-	"main.go/internal/animation"
+	"main.go/internal/animation/base"
 )
 
 /*
@@ -20,7 +20,7 @@ type vac2 struct {
 }
 
 type Pipes struct {
-	animation.Base
+	base.Base
 	grid            [][]cellState
 	pipeList        []*pipe
 	changDirChance  float64
@@ -50,10 +50,10 @@ func (m *Pipes) Init() tea.Cmd {
 	return nil
 }
 
-// New implements the animation.IAnimation interface.
-func (m *Pipes) New(appConfig config.AppConfig) animation.IAnimation {
+// New implements the base.IAnimation interface.
+func (m *Pipes) New(appConfig config.AppConfig) base.IAnimation {
 	return &Pipes{
-		Base:            animation.Base{Config: appConfig, TimeScale: appConfig.Pipes.TimeScale},
+		Base:            base.Base{Config: appConfig, TimeScale: appConfig.Pipes.TimeScale},
 		changDirChance:  appConfig.Pipes.ChangDirChance,
 		pipeSpawnChance: appConfig.Pipes.PipeSpawnChance,
 	}

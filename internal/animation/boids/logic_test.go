@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"main.go/internal/animation"
+	"main.go/internal/animation/base"
 )
 
 func TestBoids_edgeCollision(t *testing.T) {
@@ -65,7 +65,7 @@ func TestBoids_edgeCollision(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := Boids{Base: animation.Base{Width: tt.width, Height: tt.height}}
+			m := Boids{Base: base.Base{Width: tt.width, Height: tt.height}}
 			b := &boid{
 				pos: tt.initialPos,
 				dir: tt.initialDir,
