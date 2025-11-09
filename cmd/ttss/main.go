@@ -10,7 +10,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"main.go/config"
 	"main.go/internal/animation"
-	"main.go/internal/animation/base"
 )
 
 // using flags for now
@@ -51,7 +50,7 @@ func main() {
 	}
 	defer pprof.StopCPUProfile()
 
-	var selectedAnimation base.IAnimation
+	var selectedAnimation string
 
 	if *listAnimations {
 		for _, anim := range AvailableAnimations {
@@ -63,18 +62,18 @@ func main() {
 	if *runAnimation != "" {
 		for _, anim := range AvailableAnimations {
 			if anim.Name() == *runAnimation {
-				selectedAnimation = anim
+				selectedAnimation = anim.Name()
 				break
 			}
 		}
 		// If no animation was found with the given name, exit with an error
-		if selectedAnimation == nil {
+		if selectedAnimation == "" {
 			fmt.Printf("Error: Animation '%s' not found.\n", *runAnimation)
 			os.Exit(1)
 		}
 	} else {
 		// Default to the third animation (Maze Generation) if no specific animation is requested
-		selectedAnimation = AvailableAnimations[3]
+		selectedAnimation = AvailableAnimations[3].Name()
 	}
 
 	m := animation.NewRootModel(config, selectedAnimation)

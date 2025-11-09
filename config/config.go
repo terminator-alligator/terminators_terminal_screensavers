@@ -23,8 +23,10 @@ type AppConfig struct {
 }
 
 type GlobalConfig struct {
-	FrameRate float64 `toml:"frame_rate"`
-	DebugMode bool    `toml:"debug_mode"`
+	FrameRate          float64  `toml:"frame_rate"`
+	DebugMode          bool     `toml:"debug_mode"`
+	SelectedAnimations []string `toml:"selected_animations"`
+	Shuffle            bool     `toml:"shuffle_mode"`
 }
 
 type BobbleSortConfig struct {
@@ -58,8 +60,10 @@ type BoidsConfig struct {
 func NewDefaultConfig() AppConfig {
 	return AppConfig{
 		Global: GlobalConfig{
-			FrameRate: 60.0,
-			DebugMode: false,
+			FrameRate:          60.0,
+			DebugMode:          false,
+			SelectedAnimations: []string{"LangtonsAnt", "BubbleSort", "MazeGenerationPrims", "Boids", "Pipes"},
+			Shuffle:            true,
 		},
 		Boids: BoidsConfig{
 			TimeScale:        1.0,

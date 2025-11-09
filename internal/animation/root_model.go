@@ -2,19 +2,20 @@ package animation
 
 import (
 	"fmt"
+	"math/rand"
 
 	tea "github.com/charmbracelet/bubbletea"
 	"main.go/config"
 	"main.go/internal/animation/base"
 )
 
-// TODO: add the ability to chaing animations
-
 type RootModel struct {
 	Config           config.AppConfig
 	frameRate        float64
 	CurrentAnim      base.IAnimation
-	AvailableAnim    []base.IAnimation
+	AnimMap          map[string]base.IAnimation
+	AnimNames        []string
+	initialAnnim     string
 	CurrentAnimIndex int
 	width            int
 	height           int
@@ -27,16 +28,57 @@ var (
 	minWindowHeight int = 20
 )
 
-func NewRootModel(AppConfig config.AppConfig, initialAnnim base.IAnimation) RootModel {
+func NewRootModel(AppConfig config.AppConfig, initialAnnim string) RootModel {
 	return RootModel{
-		frameRate:   AppConfig.Global.FrameRate,
-		Config:      AppConfig,
-		CurrentAnim: initialAnnim,
+		frameRate:    AppConfig.Global.FrameRate,
+		Config:       AppConfig,
+		initialAnnim: initialAnnim,
 	}
 }
 
-func (m *RootModel) Init() tea.Cmd {
+func (m *RootModel) setupAnimations() {
+	m.AnimMap = make(map[string]base.IAnimation)
+	for _, anim := range GetAvailableAnimations(m.Config) {
+		m.AnimMap[anim.Name()] = anim
+	}
+	var availableNames []string
+	// Filter and order animations based on the config
+	for _, selectedName := range m.Config.Global.SelectedAnimations {
+		if _, ok := m.AnimMap[selectedName]; ok {
+			availableNames = append(availableNames, selectedName)
+		}
+	}
+	m.AnimNames = availableNames
+}
+
+func (m *RootModel) NextAnim() {
+	if m.Config.Global.Shuffle {
+		randIndex := rand.Intn(len(m.AnimNames))
+		nextAnim := m.AnimNames[randIndex]
+		m.CurrentAnim = m.AnimMap[nextAnim]
+	} else {
+		if m.CurrentAnimIndex >= len(m.AnimNames) {
+			m.CurrentAnimIndex = 0
+		} else {
+			m.CurrentAnimIndex++
+		}
+		m.CurrentAnim = m.AnimMap[m.AnimNames[m.CurrentAnimIndex]]
+	}
 	m.CurrentAnim.Init()
+}
+
+func (m *RootModel) Init() tea.Cmd {
+	m.setupAnimations()
+	if m.initialAnnim != "" {
+		if anim, ok := m.AnimMap[m.initialAnnim]; ok {
+			m.CurrentAnim = anim
+			m.CurrentAnim.Init()
+		} else {
+			m.NextAnim()
+		}
+	} else {
+		m.NextAnim()
+	}
 	timeScale := m.CurrentAnim.GetTimeScale()
 	if timeScale <= 0 {
 		return nil
@@ -70,7 +112,7 @@ func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, base.TickCmd(m.frameRate)
 		}
 	case base.AnimationFinishedMsg:
-		// TODO: handle animation finished, e.g. chain to next animation
+		m.NextAnim()
 		return m, nil
 	}
 	return m, nil
