@@ -17,6 +17,11 @@ func (m *Boids) Update(teaMsg tea.Msg) (base.IAnimation, tea.Cmd) {
 		if m.AnimationFinished {
 			return m, base.AnimationFinishedCmd()
 		}
+		if m.Config.Boids.FrameLimit != 0 {
+			if m.FrameCount >= m.Config.Boids.FrameLimit {
+				return m, base.AnimationFinishedCmd()
+			}
+		}
 	}
 	return m, nil
 }

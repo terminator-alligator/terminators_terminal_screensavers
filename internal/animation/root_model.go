@@ -64,6 +64,8 @@ func (m *RootModel) NextAnim() {
 		}
 		m.CurrentAnim = m.AnimMap[m.AnimNames[m.CurrentAnimIndex]]
 	}
+	// this is done to make sure the animation is reinitialised
+	m.CurrentAnim = m.CurrentAnim.New(m.Config)
 	m.CurrentAnim.Init()
 }
 
@@ -113,7 +115,12 @@ func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	case base.AnimationFinishedMsg:
 		m.NextAnim()
-		return m, nil
+		// we return a window size message here
+		// to make sure that the animation is properly updated
+		// otherwise, it does not know the current screen dimensions
+		return m, func() tea.Msg {
+			return tea.WindowSizeMsg{Width: m.width, Height: m.height}
+		}
 	}
 	return m, nil
 }

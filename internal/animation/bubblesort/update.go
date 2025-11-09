@@ -14,6 +14,11 @@ func (m *BubbleSort) Update(teaMsg tea.Msg) (base.IAnimation, tea.Cmd) {
 	case base.TickMsg:
 		m.FrameCount++
 		m.simUpdate()
+		if m.Config.BobbleSort.FrameLimit != 0 {
+			if m.FrameCount >= m.Config.BobbleSort.FrameLimit {
+				return m, base.AnimationFinishedCmd()
+			}
+		}
 	}
 	return m, nil
 }

@@ -17,6 +17,11 @@ func (m *Pipes) Update(teaMsg tea.Msg) (base.IAnimation, tea.Cmd) {
 		if m.AnimationFinished {
 			return m, base.AnimationFinishedCmd()
 		}
+		if m.Config.Pipes.FrameLimit != 0 {
+			if m.FrameCount >= m.Config.Pipes.FrameLimit {
+				return m, base.AnimationFinishedCmd()
+			}
+		}
 	}
 	return m, nil
 }

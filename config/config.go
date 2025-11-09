@@ -30,24 +30,29 @@ type GlobalConfig struct {
 }
 
 type BobbleSortConfig struct {
-	TimeScale float64 `toml:"time_scale"`
+	TimeScale  float64 `toml:"time_scale"`
+	FrameLimit int     `toml:"frame_limit"`
 }
 
 type MazeGenerationConfig struct {
-	TimeScale float64 `toml:"time_scale"`
+	TimeScale  float64 `toml:"time_scale"`
+	FrameLimit int     `toml:"frame_limit"`
 }
 type LangtonsAntConfig struct {
-	TimeScale float64 `toml:"time_scale"`
+	TimeScale  float64 `toml:"time_scale"`
+	FrameLimit int     `toml:"frame_limit"`
 }
 
 type PipesConfig struct {
 	TimeScale       float64 `toml:"time_scale"`
+	FrameLimit      int     `toml:"frame_limit"`
 	ChangDirChance  float64 `toml:"chang_direction_chance"`
 	PipeSpawnChance float64 `toml:"pipe_spawn_chance"`
 }
 
 type BoidsConfig struct {
 	TimeScale        float64 `toml:"time_scale"`
+	FrameLimit       int     `toml:"frame_limit"`
 	NumBoids         int     `toml:"num_boids"`
 	MaxVelocity      float64 `toml:"max_velocity"`
 	NeighborDist     float64 `toml:"neighbor_dist"`
@@ -67,6 +72,7 @@ func NewDefaultConfig() AppConfig {
 		},
 		Boids: BoidsConfig{
 			TimeScale:        1.0,
+			FrameLimit:       0,
 			NumBoids:         40,
 			MaxRange:         10.0,
 			NeighborDist:     10.0,
@@ -76,16 +82,20 @@ func NewDefaultConfig() AppConfig {
 			SeparationWeight: 2.0,
 		},
 		BobbleSort: BobbleSortConfig{
-			TimeScale: 1.0,
+			TimeScale:  1.0,
+			FrameLimit: 0,
 		},
 		LangtonsAnt: LangtonsAntConfig{
-			TimeScale: 1.0,
+			TimeScale:  1.0,
+			FrameLimit: 0,
 		},
 		MazeGeneration: MazeGenerationConfig{
-			TimeScale: 1.0,
+			TimeScale:  1.0,
+			FrameLimit: 0,
 		},
 		Pipes: PipesConfig{
 			TimeScale:       1.0,
+			FrameLimit:      0,
 			ChangDirChance:  0.5,
 			PipeSpawnChance: 0.02,
 		},

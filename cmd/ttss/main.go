@@ -71,9 +71,6 @@ func main() {
 			fmt.Printf("Error: Animation '%s' not found.\n", *runAnimation)
 			os.Exit(1)
 		}
-	} else {
-		// Default to the third animation (Maze Generation) if no specific animation is requested
-		selectedAnimation = AvailableAnimations[3].Name()
 	}
 
 	m := animation.NewRootModel(config, selectedAnimation)
