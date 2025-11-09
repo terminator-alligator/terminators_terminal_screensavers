@@ -12,6 +12,7 @@ import (
 type RootModel struct {
 	Config           config.AppConfig
 	frameRate        float64
+	timeScale        float64
 	CurrentAnim      base.IAnimation
 	AnimMap          map[string]base.IAnimation
 	AnimNames        []string
@@ -67,6 +68,7 @@ func (m *RootModel) NextAnim() {
 	// this is done to make sure the animation is reinitialised
 	m.CurrentAnim = m.CurrentAnim.New(m.Config)
 	m.CurrentAnim.Init()
+	m.timeScale = m.CurrentAnim.GetTimeScale()
 }
 
 func (m *RootModel) Init() tea.Cmd {
@@ -81,12 +83,8 @@ func (m *RootModel) Init() tea.Cmd {
 	} else {
 		m.NextAnim()
 	}
-	timeScale := m.CurrentAnim.GetTimeScale()
-	if timeScale <= 0 {
-		return nil
-	}
-	m.frameRate = m.frameRate * timeScale
-	return base.TickCmd(m.frameRate)
+	m.timeScale = m.CurrentAnim.GetTimeScale()
+	return base.TickCmd(m.frameRate * m.timeScale)
 }
 
 func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -111,7 +109,7 @@ func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.CurrentAnim, cmd = m.CurrentAnim.Update(msg)
 			return m, tea.Batch(base.TickCmd(m.frameRate), cmd)
 		} else {
-			return m, base.TickCmd(m.frameRate)
+			return m, base.TickCmd(m.frameRate * m.timeScale)
 		}
 	case base.AnimationFinishedMsg:
 		m.NextAnim()
