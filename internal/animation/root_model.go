@@ -58,12 +58,12 @@ func (m *RootModel) NextAnim() {
 		nextAnim := m.AnimNames[randIndex]
 		m.CurrentAnim = m.AnimMap[nextAnim]
 	} else {
-		if m.CurrentAnimIndex >= len(m.AnimNames) {
+		m.CurrentAnim = m.AnimMap[m.AnimNames[m.CurrentAnimIndex]]
+		if m.CurrentAnimIndex >= len(m.AnimNames)-1 {
 			m.CurrentAnimIndex = 0
 		} else {
 			m.CurrentAnimIndex++
 		}
-		m.CurrentAnim = m.AnimMap[m.AnimNames[m.CurrentAnimIndex]]
 	}
 	// this is done to make sure the animation is reinitialised
 	m.CurrentAnim = m.CurrentAnim.New(m.Config)
@@ -75,15 +75,15 @@ func (m *RootModel) Init() tea.Cmd {
 	m.setupAnimations()
 	if m.initialAnnim != "" {
 		if anim, ok := m.AnimMap[m.initialAnnim]; ok {
-			m.CurrentAnim = anim
+			m.CurrentAnim = anim.New(m.Config)
 			m.CurrentAnim.Init()
+			m.timeScale = m.CurrentAnim.GetTimeScale()
 		} else {
 			m.NextAnim()
 		}
 	} else {
 		m.NextAnim()
 	}
-	m.timeScale = m.CurrentAnim.GetTimeScale()
 	return base.TickCmd(m.frameRate * m.timeScale)
 }
 
