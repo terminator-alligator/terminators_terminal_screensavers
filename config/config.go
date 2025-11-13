@@ -20,6 +20,7 @@ type AppConfig struct {
 	LangtonsAnt    LangtonsAntConfig    `toml:"langtons_ant"`
 	MazeGeneration MazeGenerationConfig `toml:"maze_generation"`
 	Pipes          PipesConfig          `toml:"pipes"`
+	MatrixRain     MatrixRainConfig     `toml:"matrix_rain"`
 }
 
 type GlobalConfig struct {
@@ -62,6 +63,13 @@ type BoidsConfig struct {
 	SeparationWeight float64 `toml:"separation_weight"`
 }
 
+type MatrixRainConfig struct {
+	TimeScale   float64 `toml:"time_scale"`
+	FrameLimit  int     `toml:"frame_limit"`
+	TrailLength int     `toml:"trail_length"`
+	SpawnChance float64 `toml:"spawn_chance"`
+}
+
 func NewDefaultConfig() AppConfig {
 	return AppConfig{
 		Global: GlobalConfig{
@@ -98,6 +106,12 @@ func NewDefaultConfig() AppConfig {
 			FrameLimit:      0,
 			ChangDirChance:  0.5,
 			PipeSpawnChance: 0.02,
+		},
+		MatrixRain: MatrixRainConfig{
+			TimeScale:   0.5,
+			FrameLimit:  0,
+			TrailLength: 25,
+			SpawnChance: 0.25,
 		},
 	}
 }

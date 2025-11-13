@@ -6,6 +6,7 @@ import (
 	"main.go/internal/animation/boids"
 	"main.go/internal/animation/bubblesort"
 	"main.go/internal/animation/langtonsant"
+	"main.go/internal/animation/matrixrain"
 	"main.go/internal/animation/mazegenprim"
 	"main.go/internal/animation/pipes"
 )
@@ -17,5 +18,6 @@ func GetAvailableAnimations(config config.AppConfig) []base.IAnimation {
 		(&mazegenprim.MazeGenerationPrims{}).New(config),
 		(&boids.Boids{}).New(config),
 		(&pipes.Pipes{}).New(config),
+		(&matrixrain.MatrixRain{}).New(config),
 	}
 }

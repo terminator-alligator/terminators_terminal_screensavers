@@ -107,7 +107,7 @@ func (m *RootModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		var cmd tea.Cmd
 		if m.height >= minWindowHeight && m.width >= minWindowWidth {
 			m.CurrentAnim, cmd = m.CurrentAnim.Update(msg)
-			return m, tea.Batch(base.TickCmd(m.frameRate), cmd)
+			return m, tea.Batch(base.TickCmd(m.frameRate*m.timeScale), cmd)
 		} else {
 			return m, base.TickCmd(m.frameRate * m.timeScale)
 		}
